@@ -12,9 +12,14 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run: 
+          name: install dependencies
+          command: |
+            sudo apt-get install libnss3
+            sudo apt-get install xvfb
+      - run: 
           name: run tests
           command: |
-            export PERCY_TOKEN=web_2863c4fb50c747b80ce0fec93c24dac6a94425e2d1c94d2624b9d505b94d3f59
+            export PERCY_TOKEN=web_f2021df379314467a41f42ce4438ae2c9c6236aeb772e4a9c5a36fc75eaf0aae
             npm run test
             
   deploy:
