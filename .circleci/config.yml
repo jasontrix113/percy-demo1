@@ -11,16 +11,12 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: npm
-      - run:
-          name: add percy token
-          command: |
-            export PERCY_TOKEN=web_2863c4fb50c747b80ce0fec93c24dac6a94425e2d1c94d2624b9d505b94d3f59
       - run: 
           name: run tests
           command: |
+            export PERCY_TOKEN=web_2863c4fb50c747b80ce0fec93c24dac6a94425e2d1c94d2624b9d505b94d3f59
             npm run test
-            sudo apt install xvfb
-            percy snapshot _site
+            
   deploy:
     # This is an example deploy job, not actually used by the workflow
     docker:
