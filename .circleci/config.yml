@@ -38,7 +38,7 @@ jobs:
           name: run tests
           command: |
             npm install
-            npm run percy:cypress
+            npm run test
                  
 workflows:
   build-and-test:
