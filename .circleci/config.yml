@@ -11,10 +11,11 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: npm
-          
+
       - run: 
           name: run tests
           command: |
+            npm install
             export PERCY_TOKEN=web_f2021df379314467a41f42ce4438ae2c9c6236aeb772e4a9c5a36fc75eaf0aae
             npm run test
                  
