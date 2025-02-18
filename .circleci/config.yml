@@ -12,11 +12,25 @@ jobs:
       - node/install-packages:
           pkg-manager: npm
       - run:
-          name: Install required system dependencies
+          name: Install system dependencies
           command: |
             sudo apt-get update
-            sudo apt-get install -y libnss3 xvfb
-            
+            sudo apt-get install -y \
+              libnss3 \
+              libatk1.0-0 \
+              libatk-bridge2.0-0 \
+              libx11-xcb1 \
+              libxcomposite1 \
+              libxcursor1 \
+              libxdamage1 \
+              libxi6 \
+              libxrandr2 \
+              libgbm1 \
+              libasound2 \
+              libpangocairo-1.0-0 \
+              libgtk-3-0 \
+              xvfb  # Required for Cypress
+
       - run: 
           name: Install dependencies
           command: npm install
