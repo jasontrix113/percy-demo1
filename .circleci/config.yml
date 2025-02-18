@@ -11,6 +11,12 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: npm
+      - run:
+          name: Install required system dependencies
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y libnss3 xvfb
+            
       - run: 
           name: Install dependencies
           command: npm install
