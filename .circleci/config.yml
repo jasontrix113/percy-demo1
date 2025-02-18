@@ -22,22 +22,4 @@ jobs:
             export PERCY_TOKEN=web_f2021df379314467a41f42ce4438ae2c9c6236aeb772e4a9c5a36fc75eaf0aae
             npm run test
             
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
-    docker:
-      - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
-      - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
-      - run:
-          name: found github actions config
-          command: ':'
-workflows:
-  build-and-test:
-    jobs:
-      - test-node
-    # - deploy:
-    #     requires:
-    #       - test-node
+
