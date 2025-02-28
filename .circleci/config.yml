@@ -3,20 +3,14 @@
 version: 2.1
 orbs:
   node: circleci/node@5
-
-executors:
-  default-executor:
-    docker:
-      - image: cimg/node:18.0
-
 jobs:
   test-node:
+    # Install node dependencies and run tests
     executor: node/default
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: npm
-
       - run:
           name: Install system dependencies
           command: |
@@ -36,47 +30,17 @@ jobs:
               libpangocairo-1.0-0 \
               libgtk-3-0 \
               xvfb  # Required for Cypress
+
       - run: 
           name: Install dependencies
           command: npm install
-      - run:
-          name: Run Percy test
-          command: npm run test
-  check_percy_approval:
-    executor: default-executor
-    steps:
-      - run:
-          name: Check Percy Build Status
+      - run: 
+          name: run tests
           command: |
-            PERCY_BUILD_ID=$(curl -s "https://percy.io/api/v1/projects/734c002e/web/my-website-bf05414f/builds?filter=latest" \
-            -H "Authorization: Token ${PERCY_TOKEN}" | jq -r '.data[0].id')
-
-            PERCY_STATUS=$(curl -s "https://percy.io/api/v1/builds/$PERCY_BUILD_ID" \
-            -H "Authorization: Token ${PERCY_TOKEN}" | jq -r '.data.attributes.state')
-
-            if [ "$PERCY_STATUS" == "approved" ]; then
-              echo "Percy build approved. Proceeding with deployment..."
-              exit 0
-            else
-              echo "Percy build not approved. Stopping deployment."
-              exit 1
-            fi
-
-  deploy:
-    executor: default-executor
-    steps:
-      - run:
-          name: Deploy Application
-          command: ./deploy.sh 
-
+            npm install
+            npm run test
+                 
 workflows:
-  version: 2
-  deploy_after_percy_approval:
+  build-and-test:
     jobs:
       - test-node
-      - check_percy_approval:
-          requires:
-            - test-node
-      - deploy:
-          requires:
-            - check_percy_approval
