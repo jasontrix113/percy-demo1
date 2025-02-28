@@ -38,9 +38,9 @@ jobs:
           name: Install dependencies
           command: npm install
       
-    check_percy_approval:
-      executor: default
-      steps:
+  check_percy_approval:
+    executor: default
+    steps:
       - run:
           name: Check Percy Build Status
           command: |
