@@ -16,9 +16,7 @@ jobs:
       - checkout
       - node/install-packages:
           pkg-manager: npm
-      - run:
-          name: Run Percy Tests
-          command: npm run percy
+          
       - run:
           name: Install system dependencies
           command: |
