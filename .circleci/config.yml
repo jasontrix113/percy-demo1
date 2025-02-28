@@ -5,15 +5,14 @@ orbs:
   node: circleci/node@5
 jobs:
   test-node:
-    # Install node dependencies and run tests
     executor: node/default
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: npm
       - run:
-        name: Run Percy Tests
-        command: npm run percy
+          name: Run Percy Tests
+          command: npm run percy
       - run:
           name: Install system dependencies
           command: |
@@ -33,22 +32,21 @@ jobs:
               libpangocairo-1.0-0 \
               libgtk-3-0 \
               xvfb  # Required for Cypress
-
       - run: 
           name: Install dependencies
           command: npm install
-      
+
   check_percy_approval:
-    executor: default
+    executor: default-executor
     steps:
       - run:
           name: Check Percy Build Status
           command: |
             PERCY_BUILD_ID=$(curl -s "https://percy.io/api/v1/projects/734c002e/web/my-website-bf05414f/builds?filter=latest" \
-            -H "Authorization: Token web_f2021df379314467a41f42ce4438ae2c9c6236aeb772e4a9c5a36fc75eaf0aae" | jq -r '.data[0].id')
+            -H "Authorization: Token ${PERCY_TOKEN}" | jq -r '.data[0].id')
 
             PERCY_STATUS=$(curl -s "https://percy.io/api/v1/builds/$PERCY_BUILD_ID" \
-            -H "Authorization: Token web_f2021df379314467a41f42ce4438ae2c9c6236aeb772e4a9c5a36fc75eaf0aae" | jq -r '.data.attributes.state')
+            -H "Authorization: Token ${PERCY_TOKEN}" | jq -r '.data.attributes.state')
 
             if [ "$PERCY_STATUS" == "approved" ]; then
               echo "Percy build approved. Proceeding with deployment..."
@@ -59,7 +57,7 @@ jobs:
             fi
 
   deploy:
-    executor: default
+    executor: default-executor
     steps:
       - run:
           name: Deploy Application
@@ -69,10 +67,10 @@ workflows:
   version: 2
   deploy_after_percy_approval:
     jobs:
-      - test
+      - test-node
       - check_percy_approval:
           requires:
-            - test
+            - test-node
       - deploy:
           requires:
             - check_percy_approval
